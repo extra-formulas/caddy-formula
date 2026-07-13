@@ -6,4 +6,4 @@ caddy-formula-test:
     - name: Testing notifications
     - text: |
         Just trying the notification state for now
-        eager to do fancier things
+        eager to do fancier things: {{ caddy.package_name }}
