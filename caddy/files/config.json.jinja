@@ -1,21 +1,21 @@
 {# Ref: https://caddyserver.com/docs/json #}
 {
-{% if caddy.disable_admin is defined -%}
+{% if disable_admin is defined -%}
   "admin": {
     "disabled": true
   },
 {%- endif %}
-{% if caddy.log_level is defined -%}
+{% if log_level is defined -%}
   "logging": {
     "logs": {
       "defaults": {
-        "level": "{{ caddy.log_level }}"
+        "level": "{{ log_level }}"
       }
     }
   },
 {%- endif %}
   "apps": {
-{% for name, app in caddy.apps|default({})|dictsort -%}
+{% for name, app in apps|default({})|dictsort -%}
     "{{ name }}": {{ app | json }}{% if not loop.last %},{% endif %}
 {%- endfor %}
   }
