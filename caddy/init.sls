@@ -1,21 +1,57 @@
 {%- set default_sources = {'module' : 'caddy', 'defaults' : True, 'pillar' : True, 'grains' : []} %}
-{%- from "extra_formulas_common/load_config.jinja" import config as caddy with context %}
+{% from "extra_formulas_common/load_config.jinja" import config as caddy with context -%}
 
 {% if caddy.use is defined -%}
 
 {% if caddy.use | to_bool -%}
 
-caddy-install-package:
+caddy_package_installation:
   pkg.installed:
     - name: {{ caddy.package_name }}
 
+caddy_config_file:
+  file.managed:
+    - name: {{ caddy.config_file_path }}
+    - source: salt://{{ slspath }}/files/config.json.jinja
+    - template: jinja
+    - context: {{ caddy | json }}
+    - require:
+      - pkg: {{ caddy.package_name }}
+
+caddy_service_running:
+  service.running:
+    - name: {{ caddy.service_name }}
+    - enable: True
+    - require:
+      - file: {{ caddy.config_file_path }}
+
 {%- else -%}
 
-caddy-uninstallation:
-  test.show_notification:
-    - name: Uninstallation not implemented
-    - text: The uninstallation is not implemented yet. Contributions are welcome
+caddy_service_stopped:
+  service.dead:
+    - name: {{ caddy.service_name }}
+    - enable: False
+
+caddy_config_file_removal:
+  file.absent:
+    - name: {{ caddy.config_file_path }}
+    - require:
+      - service: {{ caddy.service_name }}
+
+caddy_package_removal:
+  pkg.removed:
+    - name: {{ caddy.package_name }}
+    - require:
+      - file: {{ caddy.config_file_path }}
 
 {%- endif %}
+
+{%- else -%}
+
+formula-caddy-is-disabled:
+  test.show_notification:
+    - text: |
+        The caddy formula is disabled for this host
+        You could enable it by setting the "use" flag in the pillar
 
 {%- endif %}
