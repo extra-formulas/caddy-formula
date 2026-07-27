@@ -36,6 +36,8 @@ caddy_systemd_unit_override:
     - context: {{ caddy|json }}
     - required_on:
       - service: {{ caddy.service_name }}
+    - watch_on:
+      - service: {{ caddy.service_name }}
 
 {%- endif %}
 
