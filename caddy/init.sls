@@ -38,6 +38,10 @@ caddy_systemd_unit_override:
       - service: {{ caddy.service_name }}
     - watch_on:
       - service: {{ caddy.service_name }}
+  module.run:
+    - service.systemctl_reload: []
+    - onchanges:
+      - file: /etc/systemd/{{ caddy.systemd_unit_local_path }}.d/saltstack-override.conf
 
 {%- endif %}
 
