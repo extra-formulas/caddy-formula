@@ -29,7 +29,7 @@ caddy_service_running:
 
 caddy_systemd_unit_override:
   file.managed:
-    - name: /etc/systemd/{{ systemd_unit_local_path }}.d/saltstack-override.conf
+    - name: /etc/systemd/{{ caddy.systemd_unit_local_path }}.d/saltstack-override.conf
     - source: salt://{{ slspath }}/files/{{ caddy.systemd_unit_override_template }}
     - template: jinja
     - makedirs: True
@@ -62,7 +62,7 @@ caddy_package_removal:
 
 caddy_systemd_unit_override_cleanup:
   file.absent:
-    - name: /etc/systemd/{{ systemd_unit_local_path }}.d
+    - name: /etc/systemd/{{ caddy.systemd_unit_local_path }}.d
     - required_on:
       - pkg: {{ caddy.package_name }}
 
