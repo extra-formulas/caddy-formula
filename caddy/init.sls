@@ -1,4 +1,4 @@
-{%- set default_sources = {'module' : 'caddy', 'defaults' : True, 'pillar' : True, 'grains' : []} %}
+{%- set default_sources = {'module' : 'caddy', 'defaults' : True, 'pillar' : True, 'grains' : ['osfinger']} %}
 {% from "extra_formulas_common/load_config.jinja" import config as caddy with context -%}
 
 {% if caddy.use is defined -%}
