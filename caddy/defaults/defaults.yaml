@@ -1,3 +1,4 @@
+binary_path: /usr/bin/caddy
 config_file_path: /etc/caddy/config.json
 package_name: caddy
 service_name: caddy

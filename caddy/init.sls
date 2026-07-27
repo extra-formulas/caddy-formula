@@ -25,6 +25,20 @@ caddy_service_running:
     - require:
       - file: {{ caddy.config_file_path }}
 
+{%- if caddy.systemd_unit_override_template|default("") != "" %}
+
+caddy_systemd_unit_override:
+  file.managed:
+    - name: /etc/systemd/{{ systemd_unit_local_path }}.d/saltstack-override.conf
+    - source: salt://{{ slspath }}/files/{{ caddy.systemd_unit_override_template }}
+    - template: jinja
+    - makedirs: True
+    - context: {{ caddy|json }}
+    - required_on:
+      - service: {{ caddy.service_name }}
+
+{%- endif %}
+
 {%- else -%}
 
 caddy_service_stopped:
@@ -43,6 +57,16 @@ caddy_package_removal:
     - name: {{ caddy.package_name }}
     - require:
       - file: {{ caddy.config_file_path }}
+
+{%- if caddy.systemd_unit_local_path|default("") != "" %}
+
+caddy_systemd_unit_override_cleanup:
+  file.absent:
+    - name: /etc/systemd/{{ systemd_unit_local_path }}.d
+    - required_on:
+      - pkg: {{ caddy.package_name }}
+
+{%- endif %}
 
 {%- endif %}
 

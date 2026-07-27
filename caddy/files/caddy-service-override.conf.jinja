@@ -1,0 +1,7 @@
+[Service]
+ExecStartPre=
+ExecStartPre={{ binary_path }} validate --config {{ config_file_path }} --adapter json
+ExecStart=
+ExecStart={{ binary_path }} run --environ --config {{ config_file_path }} --adapter json
+ExecReload=
+ExecReload={{ binary_path }} reload --config {{ config_file_path }} --adapter json
