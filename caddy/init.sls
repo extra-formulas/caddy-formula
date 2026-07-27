@@ -30,7 +30,7 @@ caddy_service_running:
 caddy_systemd_unit_override:
   file.managed:
     - name: /etc/systemd/{{ caddy.systemd_unit_local_path }}.d/saltstack-override.conf
-    - source: salt://{{ slspath }}/files/{{ caddy.systemd_unit_override_template }}
+    - source: salt://{{ slspath }}/{{ caddy.systemd_unit_override_template }}
     - template: jinja
     - makedirs: True
     - context: {{ caddy|json }}
