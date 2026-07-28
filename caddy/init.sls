@@ -18,13 +18,6 @@ caddy_config_file:
     - require:
       - pkg: {{ caddy.package_name }}
 
-caddy_service_running:
-  service.running:
-    - name: {{ caddy.service_name }}
-    - enable: True
-    - require:
-      - file: {{ caddy.config_file_path }}
-
 {%- if caddy.systemd_unit_override_template|default("") != "" %}
 
 caddy_systemd_unit_override:
@@ -36,7 +29,7 @@ caddy_systemd_unit_override:
     - context: {{ caddy|json }}
     - required_in:
       - service: {{ caddy.service_name }}
-    - listen_in:
+    - watch_in:
       - service: {{ caddy.service_name }}
   module.run:
     - service.systemctl_reload: []
@@ -44,6 +37,13 @@ caddy_systemd_unit_override:
       - file: /etc/systemd/{{ caddy.systemd_unit_local_path }}.d/saltstack-override.conf
 
 {%- endif %}
+
+caddy_service_running:
+  service.running:
+    - name: {{ caddy.service_name }}
+    - enable: True
+    - require:
+      - file: {{ caddy.config_file_path }}
 
 {%- if caddy._certificates is defined %}
 
