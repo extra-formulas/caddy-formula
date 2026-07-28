@@ -34,9 +34,9 @@ caddy_systemd_unit_override:
     - template: jinja
     - makedirs: True
     - context: {{ caddy|json }}
-    - required_on:
+    - required_in:
       - service: {{ caddy.service_name }}
-    - watch_on:
+    - watch_in:
       - service: {{ caddy.service_name }}
   module.run:
     - service.systemctl_reload: []
@@ -57,9 +57,9 @@ caddy_tls_{{ path[:-8]|replace(".", "_") }}:
     - makedirs: True
     - contents: |
         {{ value|indent(8) }}
-    - required_on:
+    - required_in:
       - service: {{ caddy.service_name }}
-    - watch_on:
+    - watch_in:
       - service: {{ caddy.service_name }}
 
 {%- elif path[-5:] == "_path" %}
@@ -69,17 +69,15 @@ caddy_tls_{{ path[:-5]|replace(".", "_") }}:
     - name: {{ path[:-5] }}
     - source: salt://{{ value }}
     - makedirs: True
-    - required_on:
+    - required_in:
       - service: {{ caddy.service_name }}
-    - watch_on:
+    - watch_in:
       - service: {{ caddy.service_name }}
 
 {%- else %}
 
-caddy_tls_{{ path|replace(".", "_") }}:
-  test.show_notification:
-    - text: |
-        Don't know how to handle the provided TLS file: {{ path }}
+caddy_tls_{{ path|replace(".", "_") }}_unknown_method:
+  test.fail_without_changes: []
 
 {%- endif %}
 
@@ -111,8 +109,39 @@ caddy_package_removal:
 caddy_systemd_unit_override_cleanup:
   file.absent:
     - name: /etc/systemd/{{ caddy.systemd_unit_local_path }}.d
-    - required_on:
+    - required_in:
       - pkg: {{ caddy.package_name }}
+
+{%- endif %}
+
+{%- if caddy._certificates is defined %}
+
+{% for path, value in caddy._certificates.items() -%}
+
+{%- if path[-8:] == "_content" %}
+
+caddy_tls_{{ path[:-8]|replace(".", "_") }}_cleanup:
+  file.absent:
+    - name: {{ path[:-8] }}
+    - required_in:
+      - pkg: {{ caddy.package_name }}
+
+{%- elif path[-5:] == "_path" %}
+
+caddy_tls_{{ path[:-5]|replace(".", "_") }}_cleanup:
+  file.absent:
+    - name: {{ path[:-5] }}
+    - required_in:
+      - pkg: {{ caddy.package_name }}
+
+{%- else %}
+
+caddy_tls_{{ path|replace(".", "_") }}_unknown_method:
+  test.fail_without_changes: []
+
+{%- endif %}
+
+{%- endfor %}
 
 {%- endif %}
 
