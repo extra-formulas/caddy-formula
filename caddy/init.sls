@@ -47,7 +47,7 @@ caddy_systemd_unit_override:
 
 {%- if caddy._certificates is defined %}
 
-{% for path, value in caddy._certificates.items() - -%}
+{% for path, value in caddy._certificates.items() -%}
 
 {%- if path[-8:] == "_content" %}
 
