@@ -1,4 +1,4 @@
 "Red Hat Enterprise Linux-9":
-  copr_repo: caddy/caddy
+  copr_repo: @caddy/caddy
   systemd_unit_local_path: /system/caddy.service
   systemd_unit_override_template: files/caddy-service-override.conf.jinja
