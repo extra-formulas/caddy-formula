@@ -67,7 +67,7 @@ caddy_tls_{{ path[:-8]|replace(".", "_") }}:
 caddy_tls_{{ path[:-5]|replace(".", "_") }}:
   file.managed:
     - name: {{ path[:-5] }}
-    - source: salt://{{ slspath }}/{{ value }}
+    - source: salt://{{ value }}
     - makedirs: True
     - required_on:
       - service: {{ caddy.service_name }}
