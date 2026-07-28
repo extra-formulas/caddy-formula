@@ -9,7 +9,7 @@
 
 caddy_copr_repo_installation:
   pkgrepo.managed:
-    - copr: {{ caddy.copr_repo }}
+    - copr: "{{ caddy.copr_repo }}"
     - require_in:
       - pkg: {{ caddy.package_name }}
     - watch_in:
