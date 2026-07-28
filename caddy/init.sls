@@ -5,7 +5,7 @@
 
 {% if caddy.use | to_bool -%}
 
-{% if caddy.copr_repo|default("") | to_bool -%}
+{% if caddy.copr_repo|default("") != "" -%}
 
 caddy_copr_repo_installation:
   pkgrepo.managed:
