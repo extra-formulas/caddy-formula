@@ -36,7 +36,7 @@ caddy_systemd_unit_override:
     - context: {{ caddy|json }}
     - required_in:
       - service: {{ caddy.service_name }}
-    - watch_in:
+    - listen_in:
       - service: {{ caddy.service_name }}
   module.run:
     - service.systemctl_reload: []
