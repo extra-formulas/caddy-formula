@@ -10,9 +10,9 @@
 caddy_copr_repo_installation:
   pkgrepo.managed:
     - copr: {{ caddy.copr_repo }}
-    required_in:
+    - require_in:
       - pkg: {{ caddy.package_name }}
-    watch_in:
+    - watch_in:
       - pkg: {{ caddy.package_name }}
 
 {%- endif  %}
