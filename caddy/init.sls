@@ -9,7 +9,12 @@
 
 caddy_copr_repo_installation:
   pkgrepo.managed:
-    - copr: "{{ caddy.copr_repo }}"
+    - name: "copr:copr.fedorainfracloud.org:{{ caddy.copr_repo }}"
+    - humanname: Copr repo for caddy owned by @caddy
+    - baseurl: https://fedorainfracloud.org
+    - gpgcheck: 1
+    - gpgkey: https://fedorainfracloud.org
+    - enabled: true
     - require_in:
       - pkg: {{ caddy.package_name }}
     - watch_in:
