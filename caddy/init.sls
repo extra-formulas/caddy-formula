@@ -5,6 +5,18 @@
 
 {% if caddy.use | to_bool -%}
 
+{% if caddy.copr_repo|default("") | to_bool -%}
+
+caddy_copr_repo_installation:
+  pkgrepo.managed:
+    - copr: {{ caddy.copr_repo }}
+    required_in:
+      - pkg: {{ caddy.package_name }}
+    watch_in:
+      - pkg: {{ caddy.package_name }}
+
+{%- endif  %}
+
 caddy_package_installation:
   pkg.installed:
     - name: {{ caddy.package_name }}
