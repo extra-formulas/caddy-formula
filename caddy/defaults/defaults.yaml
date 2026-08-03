@@ -1,4 +1,5 @@
 binary_path: /usr/bin/caddy
 config_file_path: /etc/caddy/config.json
+dnf_repos_dir: /etc/yum.repos.d
 package_name: caddy
 service_name: caddy
