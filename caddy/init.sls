@@ -10,7 +10,7 @@
 caddy_copr_repo_installation:
   cmd.run:
     - name: dnf copr enable -y {{ caddy.copr_repo }}
-    - unless: test -f {{ dnf_repos_dir }}/_copr_{{ caddy.copr_repo }}.repo
+    - unless: test -f {{ caddy.dnf_repos_dir }}/_copr_{{ caddy.copr_repo }}.repo
     - require_in:
       - pkg: {{ caddy.package_name }}
     - watch_in:
