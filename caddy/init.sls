@@ -120,6 +120,8 @@ caddy_service_running:
     - enable: True
     - require:
       - file: {{ caddy.config_file_path }}
+    - watch:
+      - file: {{ caddy.config_file_path }}
 
 {%- else -%}
 
