@@ -54,33 +54,6 @@ caddy_config_file:
     - require:
       - pkg: {{ caddy.package_name }}
 
-{%- if caddy.systemd_unit_override_template|default("") != "" %}
-
-caddy_systemd_unit_override:
-  file.managed:
-    - name: /etc/systemd/{{ caddy.systemd_unit_local_path }}.d/saltstack-override.conf
-    - source: salt://{{ slspath }}/{{ caddy.systemd_unit_override_template }}
-    - template: jinja
-    - makedirs: True
-    - context: {{ caddy|json }}
-    - required_in:
-      - service: {{ caddy.service_name }}
-    - watch_in:
-      - service: {{ caddy.service_name }}
-  module.run:
-    - service.systemctl_reload: []
-    - onchanges:
-      - file: /etc/systemd/{{ caddy.systemd_unit_local_path }}.d/saltstack-override.conf
-
-{%- endif %}
-
-caddy_service_running:
-  service.running:
-    - name: {{ caddy.service_name }}
-    - enable: True
-    - require:
-      - file: {{ caddy.config_file_path }}
-
 {%- if caddy._certificates is defined %}
 
 {% for path, value in caddy._certificates.items() -%}
@@ -120,6 +93,33 @@ caddy_tls_{{ path|replace(".", "_") }}_unknown_method:
 {%- endfor %}
 
 {%- endif %}
+
+{%- if caddy.systemd_unit_override_template|default("") != "" %}
+
+caddy_systemd_unit_override:
+  file.managed:
+    - name: /etc/systemd/{{ caddy.systemd_unit_local_path }}.d/saltstack-override.conf
+    - source: salt://{{ slspath }}/{{ caddy.systemd_unit_override_template }}
+    - template: jinja
+    - makedirs: True
+    - context: {{ caddy|json }}
+    - required_in:
+      - service: {{ caddy.service_name }}
+    - watch_in:
+      - service: {{ caddy.service_name }}
+  module.run:
+    - service.systemctl_reload: []
+    - onchanges:
+      - file: /etc/systemd/{{ caddy.systemd_unit_local_path }}.d/saltstack-override.conf
+
+{%- endif %}
+
+caddy_service_running:
+  service.running:
+    - name: {{ caddy.service_name }}
+    - enable: True
+    - require:
+      - file: {{ caddy.config_file_path }}
 
 {%- else -%}
 
