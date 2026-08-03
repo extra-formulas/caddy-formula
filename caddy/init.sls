@@ -22,6 +22,27 @@ caddy_package_installation:
   pkg.installed:
     - name: {{ caddy.package_name }}
 
+{% if caddy.apps is defined -%}
+
+{% for app in caddy.apps -%}
+
+{% if app in caddy.apps_map -%}
+
+caddy_add_package_{{ app }}:
+  cmd.run:
+    - name: caddy add-package {{ caddy.apps_map[app] }}
+    - unless: caddy list-modules | grep -q "{{ app }}"
+    - require:
+      - pkg: {{ caddy.package_name }}
+    - require_in:
+      - service: {{ caddy.service_name }}
+
+{%- endif  %}
+
+{%- endfor %}
+
+{%- endif  %}
+
 caddy_config_file:
   file.managed:
     - name: {{ caddy.config_file_path }}
