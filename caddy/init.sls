@@ -93,7 +93,7 @@ caddy_tls_{{ path[:-8]|replace(".", "_") }}:
     - makedirs: True
     - contents: |
         {{ value|indent(8) }}
-    - required_in:
+    - require_in:
       - service: {{ caddy.service_name }}
     - watch_in:
       - service: {{ caddy.service_name }}
@@ -105,7 +105,7 @@ caddy_tls_{{ path[:-5]|replace(".", "_") }}:
     - name: {{ path[:-5] }}
     - source: salt://{{ value }}
     - makedirs: True
-    - required_in:
+    - require_in:
       - service: {{ caddy.service_name }}
     - watch_in:
       - service: {{ caddy.service_name }}
