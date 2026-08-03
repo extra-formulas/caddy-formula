@@ -36,6 +36,8 @@ caddy_add_package_{{ app }}:
       - pkg: {{ caddy.package_name }}
     - require_in:
       - service: {{ caddy.service_name }}
+    - watch_in:
+      - service: {{ caddy.service_name }}
 
 {%- endif  %}
 
